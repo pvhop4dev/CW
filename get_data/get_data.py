@@ -14,9 +14,11 @@ chrome_options.add_argument('--ignore-certificate-errors')
 chrome_options.add_argument('--ignore-ssl-errors')
 chrome_options.add_argument('--disable-web-security')
 chrome_options.add_argument('--allow-running-insecure-content')
-chrome_options.add_argument('--headless')  # Run in headless mode
+chrome_options.add_argument('--headless=new')  # Use new headless mode
 chrome_options.add_argument('--no-sandbox')  # Required for running in Docker/containers
 chrome_options.add_argument('--disable-dev-shm-usage')  # Required for running in Docker/containers
+chrome_options.add_argument('--disable-gpu')  # Disable GPU acceleration
+chrome_options.add_argument('--disable-software-rasterizer')  # Disable software rasterizer
 
 service = ChromeService(ChromeDriverManager().install())
 
@@ -30,7 +32,7 @@ driver = webdriver.Chrome(
 def get_data_cw(code, driver):
     print(f"Processing code: {code}")
     driver.get(f"https://finance.vietstock.vn/chung-khoan-phai-sinh/{code}/cw-tong-quan.htm")
-    time.sleep(1)  # Wait for the page to load
+    time.sleep(0.5)  # Wait for the page to load
     gia = None
     selectors = [
         "#stockprice > span.price.txt-green",
@@ -72,7 +74,7 @@ def get_data_cw(code, driver):
 
 def get_codes(driver):
     driver.get("https://banggia.vndirect.com.vn/chung-khoan/chung-quyen")
-    time.sleep(5)  # Đợi trang load và JS render xong
+    time.sleep(0.5)  # Đợi trang load và JS render xong
 
     content = driver.page_source
     codes = re.findall(r'\b[A-Z]{4}\d{4}\b', content)
@@ -90,7 +92,7 @@ def get_codes(driver):
 def get_data_stock(code, driver):
     print(f"Processing code: {code}")
     driver.get(f"https://finance.vietstock.vn/{code}/ho-so-doanh-nghiep.htm")
-    time.sleep(1)  # Wait for the page to load
+    time.sleep(0.5)  # Wait for the page to load
     gia = None
     selectors = [
         "#stockprice > span.txt-orange.price",
@@ -120,10 +122,15 @@ def get_data_stock(code, driver):
 def get_danh_sach(driver):
     full_danh_muc = ""
     tong_thay_doi = 0
-    danh_sach = {"HPG":48000, "MBB": 70000, "VPB":"58000", "CMBB2407": 40000, "CMSN2511":20000, "CMWG2509": 10000}
-    for ma, so_luong in danh_sach.items():
-        ma = ma.strip().upper()
-        so_luong = so_luong
+    
+    # Read CSV file with proper delimiter and column names
+    danh_sach_df = pd.read_csv("danh_sach.csv")
+    
+    # Process each row in the DataFrame
+    for _, row in danh_sach_df.iterrows():
+        ma = str(row["ma"]).strip().upper()
+        so_luong = int(row["so_luong"])
+        
         if ma.startswith("C") and len(ma) == 8:
             try:
                 data_cw = get_data_cw(ma, driver)
@@ -131,15 +138,13 @@ def get_danh_sach(driver):
                 thay_doi = data_cw["thay_doi"]
                 gia_thay_doi = thay_doi.split('(')[0].strip()
                 gia_thay_doi = int(gia_thay_doi.replace(",", ""))
-
-                so_luong = int(so_luong)
                 
                 tong_thay_doi += gia_thay_doi * so_luong
                 
-                full_danh_muc += f"{ma}  {gia} {thay_doi}\n"
+                full_danh_muc += f"{ma}  {gia} {thay_doi} {so_luong}\n"
             except Exception as e:
                 print(f"Error processing code {ma}: {e}")
-        else :
+        else:
             try:
                 data_stock = get_data_stock(ma, driver)
                 gia = data_stock["gia"]
@@ -149,7 +154,7 @@ def get_danh_sach(driver):
                 gia_thay_doi = int(gia_thay_doi.replace(",", ""))
                 tong_thay_doi += gia_thay_doi * so_luong
 
-                full_danh_muc += f"{ma}       {gia}  {thay_doi}\n"
+                full_danh_muc += f"{ma} {gia} {thay_doi} {so_luong}\n"
             except Exception as e:
                 print(f"Error processing code {ma}: {e}")
                 
@@ -184,7 +189,7 @@ def get_chi_so_chung(ma, driver):
     url= f"https://finance.vietstock.vn/ket-qua-giao-dich?exchange={exchange}"
     print(f"Fetching data for index: {ma}")
     driver.get(url)
-    time.sleep(1)  # Wait for the page to load
+    time.sleep(0.5)  # Wait for the page to load
     index = driver.find_element(By.CSS_SELECTOR, "#trading-result > div > div.row > div.col-sm-10.col-md-10 > div > div.v-cell.col-110.text-center > h2 > b").text
 
     thay_doi = driver.find_element(By.CSS_SELECTOR, "#trading-result > div > div.row > div.col-sm-10.col-md-10 > div > div.v-cell.col-110.text-center > div > span:nth-child(1)").text

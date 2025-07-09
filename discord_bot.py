@@ -1,63 +1,66 @@
 import discord
-from discord.ext import commands
-from get_data.get_data import get_data_cw,get_data_stock, get_codes, driver, get_danh_sach, get_chi_so_chung
+from get_data.get_data import get_data_cw, get_data_stock, get_codes, driver, get_danh_sach, get_chi_so_chung
 
 intents = discord.Intents.default()
-intents.message_content = True  # Cần bật nếu muốn đọc nội dung tin nhắn
+intents.message_content = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+client = discord.Client(intents=intents)
 
-@bot.event
+@client.event
 async def on_ready():
-    print(f"✅ Bot đã đăng nhập với tên: {bot.user}")
+    print(f"✅ Bot đã đăng nhập với tên: {client.user}")
 
-@bot.command()
-async def s(ctx):
-    full_text = ctx.message.content
-    args = full_text[len("!s"):].strip().upper()
-    data = 0
-    if args == "VNINDEX":
-        map_data =  get_chi_so_chung("VNINDEX", driver)
-        ma = map_data["ma"]
-        index = map_data["index"]
-        thay_doi = map_data["thay_doi"]
-        ti_le_thay_doi = map_data["ti_le_thay_doi"]
-        data = f"Ma:{ma}, Index: {index}, Thay đổi: {thay_doi}, Tỷ lệ thay đổi: {ti_le_thay_doi}"
-    elif args == "VN30":
-        map_data = get_chi_so_chung("VN30", driver)
-        ma = map_data["ma"]
-        index = map_data["index"]
-        thay_doi = map_data["thay_doi"]
-        ti_le_thay_doi = map_data["ti_le_thay_doi"]
-        data = f"Ma:{ma}, Index: {index}, Thay đổi: {thay_doi}, Tỷ lệ thay đổi: {ti_le_thay_doi}"
-    elif args == "HNXINDEX":
-        map_data = get_chi_so_chung("HNXINDEX", driver)
-        ma = map_data["ma"]
-        index = map_data["index"]
-        thay_doi = map_data["thay_doi"]
-        ti_le_thay_doi = map_data["ti_le_thay_doi"]
-        data = f"Ma:{ma}, Index: {index}, Thay đổi: {thay_doi}, Tỷ lệ thay đổi: {ti_le_thay_doi}"
-    elif args == "ALL":
-       data = get_danh_sach(driver)
-    elif len(args) == 8:
-        data = get_data_cw(args, driver)
-    elif len(args) == 3:
-        data = get_data_stock(args, driver)
-    else:
-        await ctx.send("Vui lòng nhập mã cổ phiếu hợp lệ hoặc danh sách mã cổ phiếu.")
+@client.event
+async def on_message(message):
+    # Không trả lời tin nhắn của chính bot
+    if message.author == client.user:
         return
-    
-    await ctx.send(f"Dữ liệu: {data}")
 
+    # Lấy nội dung tin nhắn
+    content = message.content.strip().upper()
+
+    try:
+        # Xử lý chỉ số
+        if content in ["VNINDEX", "VN30", "HNXINDEX"]:
+            map_data = get_chi_so_chung(content, driver)
+            response = f"Ma:{map_data['ma']}, Index: {map_data['index']}, Thay đổi: {map_data['thay_doi']}, Tỷ lệ thay đổi: {map_data['ti_le_thay_doi']}"
+            await message.channel.send(response)
+            return
+
+        # Xử lý danh sách
+        if content == "ALL":
+            response = get_danh_sach(driver)
+            await message.channel.send(response)
+            return
+
+        # Xử lý mã chứng khoán
+        if len(content) == 8:  # Mã CW
+            data = get_data_cw(content, driver)
+            response = f"Mã: {data['code']}, Giá: {data['gia']}, Thay đổi: {data['thay_doi']}, Nước ngoài: {data['nuoc_ngoai']}"
+            await message.channel.send(response)
+            return
+
+        if len(content) == 3:  # Mã cổ phiếu thường
+            data = get_data_stock(content, driver)
+            response = f"Mã: {data['code']}, Giá: {data['gia']}, Thay đổi: {data['thay_doi']}, Nước ngoài: {data['nuoc_ngoai']}"
+            await message.channel.send(response)
+            return
+
+        # Nếu không hợp lệ
+        await message.channel.send("Vui lòng nhập mã cổ phiếu hợp lệ hoặc danh sách mã cổ phiếu.")
+
+    except Exception as e:
+        print(f"Error processing message: {e}")
+        await message.channel.send("Xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại sau.")
+
+# Load environment variables
 import os
 from dotenv import load_dotenv
-
-# Load environment variables from .env file
 load_dotenv()
 
+# Get token and run bot
 bot_token = os.getenv("DISCORD_TOKEN")
 if not bot_token:
     raise ValueError("DISCORD_TOKEN environment variable is not set")
 
-print(bot_token)
-bot.run(bot_token)
+client.run(bot_token)
