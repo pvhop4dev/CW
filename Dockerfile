@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir --default-timeout=100 selenium requests discord python-dotenv webdriver-manager
+RUN pip install --no-cache-dir --default-timeout=100 selenium requests discord python-dotenv webdriver-manager pandas
 
 # Copy application code
 COPY . .
