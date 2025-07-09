@@ -49,5 +49,15 @@ async def s(ctx):
     
     await ctx.send(f"Dữ liệu: {data}")
 
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
 bot_token = os.getenv("DISCORD_TOKEN")
+if not bot_token:
+    raise ValueError("DISCORD_TOKEN environment variable is not set")
+
+print(bot_token)
 bot.run(bot_token)

@@ -3,3 +3,6 @@ requests
 fastapi
 uvicorn
 discord
+python-dotenv
+webdriver-manager
+pandas

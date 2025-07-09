@@ -4,16 +4,26 @@ from selenium.webdriver.common.by import By
 import time
 import pandas as pd
 import re
+import os
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 
-chrome_options = webdriver.ChromeOptions()
+chrome_options = Options()
 chrome_options.add_argument('--ignore-certificate-errors')
 chrome_options.add_argument('--ignore-ssl-errors')
 chrome_options.add_argument('--disable-web-security')
 chrome_options.add_argument('--allow-running-insecure-content')
-chrome_options.add_argument('--headless')  # Run in headless mode if you don't need a GUI
+chrome_options.add_argument('--headless')  # Run in headless mode
+chrome_options.add_argument('--no-sandbox')  # Required for running in Docker/containers
+chrome_options.add_argument('--disable-dev-shm-usage')  # Required for running in Docker/containers
 
-service = Service(executable_path="./chromedriver.exe")
-driver = webdriver.Chrome(service=service, options=chrome_options)
+service = ChromeService(ChromeDriverManager().install())
+
+driver = webdriver.Chrome(
+    service=service,
+    options=chrome_options
+)
 
 
 
