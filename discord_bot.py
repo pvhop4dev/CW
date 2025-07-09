@@ -36,7 +36,7 @@ async def on_message(message):
         # Xử lý mã chứng khoán
         if len(content) == 8:  # Mã CW
             data = get_data_cw(content, driver)
-            response = f"Mã: {data['code']}, Giá: {data['gia']}, Thay đổi: {data['thay_doi']}, Nước ngoài: {data['nuoc_ngoai']}"
+            response = f"Mã: {data['code']}, Giá: {data['gia']}, Thay đổi: {data['thay_doi']}, Cơ sở: {data['base_stock']}, Giá hòa vốn: {data['gia_hoa_von']}, Tỷ lệ hòa vốn: {data['ti_le_gia_hoa_von']}, Số ngày đến hạn: {data['so_ngay_den_han']}"
             await message.channel.send(response)
             return
 
