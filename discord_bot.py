@@ -1,6 +1,11 @@
 import discord
 from get_data.get_data import get_data_cw, get_data_stock, get_codes, driver, get_danh_sach, get_chi_so_chung
 
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -18,7 +23,7 @@ async def on_message(message):
 
     # Lấy nội dung tin nhắn
     content = message.content.strip().upper()
-
+    print(f"Processing message: {content}")
     try:
         # Xử lý chỉ số
         if content in ["VNINDEX", "VN30", "HNXINDEX"]:
@@ -53,14 +58,14 @@ async def on_message(message):
         print(f"Error processing message: {e}")
         await message.channel.send("Xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại sau.")
 
-# Load environment variables
-import os
-from dotenv import load_dotenv
-load_dotenv()
 
 # Get token and run bot
 bot_token = os.getenv("DISCORD_TOKEN")
 if not bot_token:
     raise ValueError("DISCORD_TOKEN environment variable is not set")
 
-client.run(bot_token)
+
+if __name__ == "__main__":
+    print("Bot is running...")
+    client.run(bot_token)
+    

@@ -117,15 +117,15 @@ def get_data_stock(code, driver):
         "thay_doi": thay_doi,
         "nuoc_ngoai": nuoc_ngoai
     }
-
+ # Read CSV file with proper delimiter and column names
+danh_sach_df = pd.read_csv("danh_sach.csv")
 
 def get_danh_sach(driver):
     full_danh_muc = ""
     tong_thay_doi = 0
     
-    # Read CSV file with proper delimiter and column names
-    danh_sach_df = pd.read_csv("danh_sach.csv")
-    
+   
+
     # Process each row in the DataFrame
     for _, row in danh_sach_df.iterrows():
         ma = str(row["ma"]).strip().upper()

@@ -25,3 +25,4 @@ wheels/
 .installed.cfg
 *.egg
 .DS_Store
+get_data/__pycache__/
