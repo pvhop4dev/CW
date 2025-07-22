@@ -84,7 +84,7 @@ def get_codes(driver):
         f.write('[' + ','.join(f'"{code}"' for code in unique_codes) + ']')
 
     print("Total unique codes found:", len(unique_codes))
-    unique_codes = ["CHPG2502","CMBB2407"]
+    # unique_codes = ["CHPG2502","CMBB2407"]
     return unique_codes
 
 

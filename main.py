@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 import time
 import pandas as pd
 import re
-from get_data.get_data import get_data, get_codes, driver
+from get_data.get_data import get_data_cw, get_codes, driver
 
 
 
@@ -15,7 +15,7 @@ data = []
 
 for code in unique_codes:
     try:
-        data.append(get_data(code, driver))
+        data.append(get_data_cw(code, driver))
     except Exception as e:
         print(f"Error processing code {code}: {e}")
 
