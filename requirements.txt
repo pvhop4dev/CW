@@ -1,6 +1,8 @@
-selenium
-requests
-discord
-python-dotenv
-webdriver-manager
-pandas
+selenium>=4.15.0
+requests>=2.31.0
+discord.py>=2.3.2
+python-dotenv>=1.0.0
+webdriver-manager>=4.0.1
+pandas>=2.1.0
+urllib3>=2.0.0
+chardet>=5.1.0

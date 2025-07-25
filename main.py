@@ -12,9 +12,11 @@ from get_data.get_data import get_data_cw, get_codes, driver
 unique_codes = get_codes(driver)
 # unique_codes = ["CMBB2501","CMBB2502"]
 data = []
-
+i = 0
 for code in unique_codes:
     try:
+        i += 1
+        print(f"Processing code {i}/{len(unique_codes)}: {code}")
         data.append(get_data_cw(code, driver))
     except Exception as e:
         print(f"Error processing code {code}: {e}")
