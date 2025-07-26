@@ -68,7 +68,8 @@ def get_data_cw(code, driver):
         "gia_lech": gia_lech,
         "khoi_luong": khoi_luong,
         "ti_le_gia_hoa_von": str(ti_le_gia_hoa_von) + "%",
-        "so_ngay_den_han": so_ngay_den_han
+        "so_ngay_den_han": so_ngay_den_han,
+        "dang_chu_y": True
     }
 
 
