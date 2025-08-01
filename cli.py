@@ -44,10 +44,10 @@ def process_input(content):
         if content in ["VNINDEX", "VN30", "HNXINDEX"]:
             map_data = get_chi_so_chung(content, driver)
             response = (
-                f"\n📊 {map_data['ma']}\n"
-                f"📈 Giá: {map_data['index']}\n"
-                f"🔄 Thay đổi: {map_data['thay_doi']}\n"
-                f"📉 Tỷ lệ: {map_data['ti_le_thay_doi']}\n"
+                f"\n {map_data['ma']}\n"
+                f"Giá: {map_data['index']}\n"
+                f"Thay đổi: {map_data['thay_doi']}\n"
+                f"Tỷ lệ: {map_data['ti_le_thay_doi']}\n"
             )
             return response
             
@@ -60,13 +60,13 @@ def process_input(content):
         if len(content) == 8:
             data = get_data_cw(content, driver)
             response = (
-                f"\n📌 {data['code']}\n"
-                f"💰 Giá: {data['gia']}\n"
-                f"🔄 Thay đổi: {data['thay_doi']}\n"
-                f"🏢 Cơ sở: {data['base_stock']}\n"
-                f"⚖️ Giá hòa vốn: {data['gia_hoa_von']}\n"
-                f"📊 Tỷ lệ hòa vốn: {data['ti_le_gia_hoa_von']}\n"
-                f"⏳ Số ngày đến hạn: {data['so_ngay_den_han']}\n"
+                f"\n {data['code']}\n"
+                f"Giá: {data['gia']}\n"
+                f"Thay đổi: {data['thay_doi']}\n"
+                f"Cơ sở: {data['base_stock']}\n"
+                f"Giá hòa vốn: {data['gia_hoa_von']}\n"
+                f"Tỷ lệ hòa vốn: {data['ti_le_gia_hoa_von']}\n"
+                f"Số ngày đến hạn: {data['so_ngay_den_han']}\n"
             )
             return response
             
@@ -74,10 +74,10 @@ def process_input(content):
         if len(content) == 3:
             data = get_data_stock(content, driver)
             response = (
-                f"\n📈 {data['code']}\n"
-                f"💰 Giá: {data['gia']}\n"
-                f"🔄 Thay đổi: {data['thay_doi']}\n"
-                f"🌍 Nước ngoài: {data['nuoc_ngoai']}\n"
+                f"\n {data['code']}\n"
+                f"Giá: {data['gia']}\n"
+                f"Thay đổi: {data['thay_doi']}\n"
+                f"Nước ngoài: {data['nuoc_ngoai']}\n"
             )
             return response
             
@@ -106,7 +106,7 @@ def main():
             
             # Check for exit commands
             if user_input.lower() in ['exit', 'quit', 'thoat']:
-                print("\n👋 Tạm biệt! Hẹn gặp lại! 👋\n")
+                print(" Tạm biệt! Hẹn gặp lại! ")
                 break
                 
             # Process the input
