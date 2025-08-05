@@ -37,7 +37,9 @@ def get_data_cw(code, driver):
     selectors = [
         "#stockprice > span.price.txt-green",
         "#stockprice > span.price.txt-red",
-        "#stockprice > span.price.txt-orange"
+        "#stockprice > span.price.txt-orange",
+        "#stockprice > span.price.txt-purple",
+        "#stockprice > span.price.txt-blue"
     ]
     for selector in selectors:
         try:
@@ -98,7 +100,9 @@ def get_data_stock(code, driver):
     selectors = [
         "#stockprice > span.txt-orange.price",
         "#stockprice > span.txt-red.price",
-        "#stockprice > span.txt-green.price"
+        "#stockprice > span.txt-green.price",
+        "#stockprice > span.txt-purple.price",
+        "#stockprice > span.txt-blue.price"
     ]
     for selector in selectors:
         try:
