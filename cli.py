@@ -1,6 +1,6 @@
 import os
 import logging
-from get_data.get_data import get_data_cw, get_data_stock, get_codes, driver, get_danh_sach, get_chi_so_chung
+from get_data.get_data import get_data_cw, get_data_stock, get_codes, get_driver, get_danh_sach, get_chi_so_chung
 from dotenv import load_dotenv
 
 # Enable logging
@@ -38,7 +38,7 @@ def print_help():
 def process_input(content):
     """Process user input and return the result."""
     content = content.strip().upper()
-    
+    driver = get_driver()
     try:
         # Process index
         if content in ["VNINDEX", "VN30", "HNXINDEX"]:
@@ -97,8 +97,6 @@ def main():
     # Load environment variables
     load_dotenv()
     
-    print("\n🤖 Chào mừng đến với Công cụ Tra cứu Chứng khoán!")
-    print("Gõ HELP để xem hướng dẫn sử dụng hoặc EXIT để thoát.\n")
     
     while True:
         try:
@@ -106,7 +104,6 @@ def main():
             
             # Check for exit commands
             if user_input.lower() in ['exit', 'quit', 'thoat']:
-                print(" Tạm biệt! Hẹn gặp lại! ")
                 break
                 
             # Process the input
@@ -115,9 +112,7 @@ def main():
             else:
                 result = process_input(user_input)
                 print(result)
-                
         except KeyboardInterrupt:
-            print("\n\n👋 Tạm biệt! Hẹn gặp lại! 👋\n")
             break
         except Exception as e:
             logger.error(f"Unexpected error: {e}", exc_info=True)

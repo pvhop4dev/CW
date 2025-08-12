@@ -20,12 +20,20 @@ chrome_options.add_argument('--disable-dev-shm-usage')  # Required for running i
 chrome_options.add_argument('--disable-gpu')  # Disable GPU acceleration
 chrome_options.add_argument('--disable-software-rasterizer')  # Disable software rasterizer
 
-service = ChromeService(ChromeDriverManager().install())
+_driver = None  # Biến toàn cục lưu driver
 
-driver = webdriver.Chrome(
-    service=service,
-    options=chrome_options
-)
+def get_driver():
+    global _driver
+    if _driver is None:
+        start = time.time()
+        print('[DEBUG] Start initializing ChromeDriver...')
+        service = ChromeService(ChromeDriverManager().install())
+        _driver = webdriver.Chrome(
+            service=service,
+            options=chrome_options
+        )
+        print(f'[DEBUG] ChromeDriver initialized in {time.time() - start:.2f} seconds')
+    return _driver
 
 
 

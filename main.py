@@ -4,11 +4,11 @@ from selenium.webdriver.common.by import By
 import time
 import pandas as pd
 import re
-from get_data.get_data import get_data_cw, get_codes, driver
+from get_data.get_data import get_data_cw, get_codes, get_driver
 
 
 
-
+driver = get_driver()
 unique_codes = get_codes(driver)
 # unique_codes = ["CMBB2501","CMBB2502"]
 data = []
