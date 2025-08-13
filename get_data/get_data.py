@@ -27,7 +27,7 @@ def get_driver():
     if _driver is None:
         start = time.time()
         print('[DEBUG] Start initializing ChromeDriver...')
-        service = ChromeService(ChromeDriverManager().install())
+        service = ChromeService(ChromeDriverManager(driver_version="138.0.7204.168").install())
         _driver = webdriver.Chrome(
             service=service,
             options=chrome_options
