@@ -8,6 +8,7 @@ import os
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+import random
 
 chrome_options = Options()
 chrome_options.add_argument('--ignore-certificate-errors')
@@ -40,7 +41,7 @@ def get_driver():
 def get_data_cw(code, driver):
     print(f"code: {code}")
     driver.get(f"https://finance.vietstock.vn/chung-khoan-phai-sinh/{code}/cw-tong-quan.htm")
-    time.sleep(0.5)  # Wait for the page to load
+    time.sleep(random.uniform(0.2, 0.6))  # Wait for the page to load
     gia = None
     selectors = [
         "#stockprice > span.price.txt-green",
@@ -85,13 +86,13 @@ def get_data_cw(code, driver):
 
 def get_codes(driver):
     driver.get("https://banggia.vndirect.com.vn/chung-khoan/chung-quyen")
-    time.sleep(0.5)  # Đợi trang load và JS render xong
+    time.sleep(random.uniform(0.2, 0.6))  # Đợi trang load và JS render xong
 
     content = driver.page_source
     codes = re.findall(r'\b[A-Z]{4}\d{4}\b', content)
     unique_codes = sorted(set(codes))
 
-    with open("codes.txt", "w", encoding="utf-8") as f:
+    with open("x_codes.txt", "w", encoding="utf-8") as f:
         f.write('[' + ','.join(f'"{code}"' for code in unique_codes) + ']')
 
     print("Total unique codes found:", len(unique_codes))
@@ -103,7 +104,7 @@ def get_codes(driver):
 def get_data_stock(code, driver):
     print(f"code: {code}")
     driver.get(f"https://finance.vietstock.vn/{code}/ho-so-doanh-nghiep.htm")
-    time.sleep(0.5)  # Wait for the page to load
+    time.sleep(random.uniform(0.2, 0.6))  # Wait for the page to load
     gia = None
     selectors = [
         "#stockprice > span.txt-orange.price",
@@ -201,7 +202,7 @@ def get_chi_so_chung(ma, driver):
     url= f"https://finance.vietstock.vn/ket-qua-giao-dich?exchange={exchange}"
     print(f"code: {ma}")
     driver.get(url)
-    time.sleep(0.5)  # Wait for the page to load
+    time.sleep(random.uniform(0.2, 0.6))  # Wait for the page to load
     index = driver.find_element(By.CSS_SELECTOR, "#trading-result > div > div.row > div.col-sm-10.col-md-10 > div > div.v-cell.col-110.text-center > h2 > b").text
 
     thay_doi = driver.find_element(By.CSS_SELECTOR, "#trading-result > div > div.row > div.col-sm-10.col-md-10 > div > div.v-cell.col-110.text-center > div > span:nth-child(1)").text
