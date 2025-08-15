@@ -27,7 +27,7 @@ def get_driver():
     if _driver is None:
         start = time.time()
         print('[DEBUG] Start initializing ChromeDriver...')
-        service = ChromeService(ChromeDriverManager(driver_version="138.0.7204.168").install())
+        service = ChromeService(ChromeDriverManager(driver_version="139.0.7258").install())
         _driver = webdriver.Chrome(
             service=service,
             options=chrome_options
@@ -38,7 +38,7 @@ def get_driver():
 
 
 def get_data_cw(code, driver):
-    print(f"Processing code: {code}")
+    print(f"code: {code}")
     driver.get(f"https://finance.vietstock.vn/chung-khoan-phai-sinh/{code}/cw-tong-quan.htm")
     time.sleep(0.5)  # Wait for the page to load
     gia = None
@@ -101,7 +101,7 @@ def get_codes(driver):
 
 
 def get_data_stock(code, driver):
-    print(f"Processing code: {code}")
+    print(f"code: {code}")
     driver.get(f"https://finance.vietstock.vn/{code}/ho-so-doanh-nghiep.htm")
     time.sleep(0.5)  # Wait for the page to load
     gia = None
@@ -179,8 +179,7 @@ def get_danh_sach(driver):
 
     tong_thay_doi = int(tong_thay_doi)
     tong_thay_doi = f"{tong_thay_doi:,}"
-    full_danh_muc += f"Tổng thay đổi: {tong_thay_doi}\n"
-    print(full_danh_muc)
+    full_danh_muc += f"Change: {tong_thay_doi}\n"
     return full_danh_muc
 
 
@@ -200,14 +199,14 @@ def get_chi_so_chung(ma, driver):
     else:
         raise ValueError("Mã chỉ số không hợp lệ. Vui lòng sử dụng VNINDEX, VN30, HNX, UPCOM hoặc HNX30.")
     url= f"https://finance.vietstock.vn/ket-qua-giao-dich?exchange={exchange}"
-    print(f"Fetching data for index: {ma}")
+    print(f"code: {ma}")
     driver.get(url)
     time.sleep(0.5)  # Wait for the page to load
     index = driver.find_element(By.CSS_SELECTOR, "#trading-result > div > div.row > div.col-sm-10.col-md-10 > div > div.v-cell.col-110.text-center > h2 > b").text
 
     thay_doi = driver.find_element(By.CSS_SELECTOR, "#trading-result > div > div.row > div.col-sm-10.col-md-10 > div > div.v-cell.col-110.text-center > div > span:nth-child(1)").text
     ti_le_thay_doi = driver.find_element(By.CSS_SELECTOR, "#trading-result > div > div.row > div.col-sm-10.col-md-10 > div > div.v-cell.col-110.text-center > div > span.m-l").text
-    print(f"Ma:{ma}, Index: {index}, Thay đổi: {thay_doi}, Tỷ lệ thay đổi: {ti_le_thay_doi}")
+   
     return {
         "ma": ma,
         "index": index,
